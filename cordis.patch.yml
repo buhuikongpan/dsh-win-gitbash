@@ -1,0 +1,6 @@
+# dsh-win-gitbash — bundle patch: activation row for the profile layer.
+# This file is what makes the package installable via `dsh plugin add` and
+# loadable as a profile bundle.
+- insert:
+    - id: tool-gitbash
+      name: 'dsh-tool-gitbash'

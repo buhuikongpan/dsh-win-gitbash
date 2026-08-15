@@ -6,15 +6,19 @@
 
 ## 理念
 
-Windows 自带的 PowerShell 启动慢、语法啰嗦、日常命令体验差；而 WSL 自带的
-bash 只能在 WSL 环境里用，无法直接在 Windows 侧执行命令。本项目直接依赖
-**Git for Windows 自带的 bash**（`C:\Program Files\Git\bin\bash.exe`），
-给 Windows 原生提供一个轻量、快速、可用的 bash 环境，供 AI 模型（Agent）执行
-shell 命令。
+DSH（DeepSeek Harness）在 Windows 上有两个原生命令工具的痛点：
+
+- ⚠️ 原生的 **pwsh** 工具：Windows 上启动慢、执行卡顿，日常命令体验差
+- ⚠️ 原生的 **bash** 工具：依赖 WSL，Windows 端没有 WSL 环境就用不了
+
+本项目为 DSH 提供一个第三个选项：直接依赖 **Git for Windows 自带的 bash**
+（`C:\Program Files\Git\bin\bash.exe`），以 DSH 工具插件形式注册为 `gitbash`
+工具。**唯一的前置依赖就是装一个 Git for Windows**，装完即得一个原生、快速、
+可用的 bash 环境，供 AI 模型（Agent）在 Windows 上执行 shell 命令。
 
 - 🚀 **快**：Git Bash 启动远快于 PowerShell，无 WSL 层开销
-- 🪟 **原生**：直接跑在 Windows 上，路径同时支持 `C:\...` 与 `/c/...`
-- 🔌 **插件化**：以 DSH 工具插件形式注册为 `gitbash` 工具，与 `pwsh` 平级
+- 🪟 **原生**：不需要 WSL，直接跑在 Windows 上，路径同时支持 `C:\...` 与 `/c/...`
+- 🔌 **插件化**：以 DSH 工具插件形式注册为 `gitbash` 工具，与 `pwsh`、`bash` 平级
 - 🧯 **安全**：支持文件沙箱模式、超时控制、输出截断与后台任务
 
 ## 依赖

@@ -1,0 +1,62 @@
+# dsh-win-gitbash
+
+**面向 Windows 的 Git Bash 工具插件**（DSH / DeepSeek Harness tool plugin）
+
+> Model-facing Git Bash tool for Windows — replaces pwsh / WSL-only bash.
+
+## 理念
+
+Windows 自带的 PowerShell 启动慢、语法啰嗦、日常命令体验差；而 WSL 自带的
+bash 只能在 WSL 环境里用，无法直接在 Windows 侧执行命令。本项目直接依赖
+**Git for Windows 自带的 bash**（`C:\Program Files\Git\bin\bash.exe`），
+给 Windows 原生提供一个轻量、快速、可用的 bash 环境，供 AI 模型（Agent）执行
+shell 命令。
+
+- 🚀 **快**：Git Bash 启动远快于 PowerShell，无 WSL 层开销
+- 🪟 **原生**：直接跑在 Windows 上，路径同时支持 `C:\...` 与 `/c/...`
+- 🔌 **插件化**：以 DSH 工具插件形式注册为 `gitbash` 工具，与 `pwsh` 平级
+- 🧯 **安全**：支持文件沙箱模式、超时控制、输出截断与后台任务
+
+## 依赖
+
+**必须安装 Git for Windows**（提供 `bash.exe`）：
+
+- 下载：https://git-scm.com/download/win
+- 安装后请确认以下任一路径存在（工具会自动探测）：
+  - `C:\Program Files\Git\bin\bash.exe`
+  - `C:\Program Files\Git\usr\bin\bash.exe`
+
+## 安装（作为 DSH 工具插件）
+
+1. 将本包放入 DSH 的 `node_modules`（如
+   `%APPDATA%\npm\node_modules\dsh-tool-gitbash`）或作为本地依赖引用。
+2. 确保 peer 依赖可用（`@deepseek-ai/cordis`、`@deepseek-ai/dsh-tools`、
+   `@deepseek-ai/dsh-llm`、`@deepseek-ai/dsh-sandbox`、`@deepseek-ai/dsh-shell`、
+   `@deepseek-ai/dsh-timeout`）。
+3. 在 DSH 组合（composition）中启用该插件，重启后模型即获得 `gitbash` 工具。
+
+## 工具参数
+
+| 参数 | 说明 |
+| --- | --- |
+| `command` | 要执行的 Git Bash 命令（`bash -c`） |
+| `description` | 命令用途的一句话描述（界面展示用） |
+| `timeoutMs` | 超时（默认 120s，上限 600s） |
+| `workdir` | 工作目录，默认会话目录 |
+| `run_in_background` | 后台运行，立即返回 jobId |
+| `sandbox_permissions` / `justification` | 沙箱升级（配置了沙箱时可用） |
+
+## 项目结构
+
+```
+dsh-win-gitbash
+├── index.js        # 兼容入口（重新导出 lib/index.js）
+├── lib/
+│   ├── index.js    # Host 端插件：Git Bash 探测、命令执行、超时/沙箱/后台
+│   └── client.js   # Client 端：Git Bash 调用卡片 UI（tool.call.toolview）
+└── package.json
+```
+
+## 许可证
+
+[MIT](./LICENSE)

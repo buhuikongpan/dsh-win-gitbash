@@ -1,8 +1,13 @@
 # dsh-win-gitbash
 
+> 🏅 已收录于 [Awesome DeepSeek Harness (DSH) Plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin) 精选列表（🛠️ 工具与能力）
+> [![Awesome DSH Plugin](https://awesome-dsh-plugin.com/badge.svg)](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin)
+
 **面向 Windows 的 Git Bash 工具插件**（DSH / DeepSeek Harness tool plugin）
 
 > Model-facing Git Bash tool for Windows — replaces pwsh / WSL-only bash.
+>
+> 🎯 **用于替代原生 pwsh 的 gitbash**：Git for Windows 自带的 bash，快、原生、免 WSL。
 
 ## 理念
 
@@ -30,7 +35,23 @@ DSH（DeepSeek Harness）在 Windows 上有两个原生命令工具的痛点：
   - `C:\Program Files\Git\bin\bash.exe`
   - `C:\Program Files\Git\usr\bin\bash.exe`
 
-## 安装（作为 DSH 工具插件）
+## 安装
+
+本插件以 npm 包 **`dsh-tool-gitbash`** 发布，声明了 `dsh.bundle` manifest，可直接通过 DSH 插件系统安装。
+
+**方式一：命令行安装（推荐）**
+
+```sh
+dsh plugin add dsh-tool-gitbash
+```
+
+> 安装命令会自动处理 `@deepseek-ai/*` peer 依赖；装完在 DSH 组合（composition）/ profile 中启用该 bundle，重启后模型即可获得 `gitbash` 工具。
+
+**方式二：dsh-market 图形界面**
+
+在 DSH Web 设置 → 插件市场（dsh-market）中搜索 `dsh-tool-gitbash`，一键安装。
+
+**方式三：手动放入 node_modules**
 
 1. 将本包放入 DSH 的 `node_modules`（如
    `%APPDATA%\npm\node_modules\dsh-tool-gitbash`）或作为本地依赖引用。

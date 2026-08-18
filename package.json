@@ -1,6 +1,6 @@
 {
   "name": "dsh-tool-gitbash",
-  "description": "Model-facing Git Bash tool for Windows (replaces pwsh/WSL-bash)",
+  "description": "用于替代原生pwsh的gitbash Model-facing Git Bash tool for Windows (replaces pwsh/WSL-bash)",
   "version": "0.1.0",
   "type": "module",
   "main": "lib/index.js",

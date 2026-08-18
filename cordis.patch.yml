@@ -4,3 +4,6 @@
 - insert:
     - id: tool-gitbash
       name: 'dsh-tool-gitbash'
+      # 自动探测不到 bash 时，可取消注释并指定路径
+      # config:
+      #   bashPath: 'C:\Users\me\scoop\apps\git\current\bin\bash.exe'

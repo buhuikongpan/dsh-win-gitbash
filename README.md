@@ -34,6 +34,8 @@ DSH（DeepSeek Harness）在 Windows 上有两个原生命令工具的痛点：
 - 安装后请确认以下任一路径存在（工具会自动探测）：
   - `C:\Program Files\Git\bin\bash.exe`
   - `C:\Program Files\Git\usr\bin\bash.exe`
+  - scoop 安装的 Git（跟随 `SCOOP` 环境变量定位，默认 `C:\Users\<用户名>\scoop\apps\git\current\bin\bash.exe`）
+  - 任意 PATH 目录下的 `bash.exe`（如自定义盘符安装、便携版等；`System32` 下的 WSL 启动器会被跳过）
 
 ## 安装
 
@@ -59,6 +61,18 @@ dsh plugin add dsh-tool-gitbash
    `@deepseek-ai/dsh-llm`、`@deepseek-ai/dsh-sandbox`、`@deepseek-ai/dsh-shell`、
    `@deepseek-ai/dsh-timeout`）。
 3. 在 DSH 组合（composition）中启用该插件，重启后模型即获得 `gitbash` 工具。
+
+## 配置
+
+自动探测找不到 bash 时，可通过插件 `bashPath` 显式配置路径，例如在 cordis.patch.yml 的插件行中：
+
+```yaml
+- insert:
+    - id: tool-gitbash
+      name: 'dsh-tool-gitbash'
+      config:
+        bashPath: 'C:\Users\me\scoop\apps\git\current\bin\bash.exe'
+```
 
 ## 工具参数
 

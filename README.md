@@ -26,6 +26,16 @@ DSH（DeepSeek Harness）在 Windows 上有两个原生命令工具的痛点：
 - 🔌 **插件化**：以 DSH 工具插件形式注册为 `gitbash` 工具，与 `pwsh`、`bash` 平级
 - 🧯 **安全**：支持文件沙箱模式、超时控制、输出截断与后台任务
 
+## 与原生 pwsh / bash 对齐
+
+本工具在**行为上**向 DSH 原生 `pwsh`、`bash` 工具看齐，替代切换几乎无感：
+
+- `run_in_background` 参数仅在 `enableRunInBackground` 开启时暴露；关闭时描述提示"后台执行不可用"，与原生一致
+- 沙箱受限时的升级提示 + 权限提问（`sandbox_permissions` + `justification` 双条件触发，经由 `approveEscalation` + `ctx.approval`）与原生完全一致
+- 工作目录解析与原生 `bash` 一致：沙箱根优先，否则会话 cwd 经 `canonicalPath` 规范化
+
+> 差异仅在**实现层**：原生依赖 `ctx.shell` 执行器；本工具作为 `ctx.subprocess` 消费者直接调用 Git for Windows 自带 bash，并额外提供原生所没有的调用卡片 UI。
+
 ## 依赖
 
 **必须安装 Git for Windows**（提供 `bash.exe`）：

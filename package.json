@@ -1,7 +1,7 @@
 {
   "name": "dsh-tool-gitbash",
   "description": "用于替代原生pwsh的gitbash Model-facing Git Bash tool for Windows (replaces pwsh/WSL-bash)",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -18,12 +18,25 @@
     }
   },
   "license": "MIT",
+  "engines": {
+    "dsh": ">=0.1.0-rc.6 <0.3.0"
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "~3.18.4"
+  },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "^4.0.1",
-    "@deepseek-ai/dsh-tools": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-llm": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-sandbox": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-shell": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-timeout": "^0.1.0-rc.6"
+    "@deepseek-ai/cordis": "~4.0.4",
+    "@deepseek-ai/dsh-agent": ">=0.1.0-rc.6 <0.3.0",
+    "@deepseek-ai/dsh-jobs": ">=0.1.0-rc.6 <0.3.0",
+    "@deepseek-ai/dsh-llm": ">=0.1.0-rc.6 <0.3.0",
+    "@deepseek-ai/dsh-sandbox": ">=0.1.0-rc.6 <0.3.0",
+    "@deepseek-ai/dsh-sandbox-policy": ">=0.1.0-rc.6 <0.3.0",
+    "@deepseek-ai/dsh-shell": ">=0.1.0-rc.6 <0.3.0",
+    "@deepseek-ai/dsh-shell-env": ">=0.1.0-rc.6 <0.3.0",
+    "@deepseek-ai/dsh-subprocess": ">=0.1.0-rc.6 <0.3.0",
+    "@deepseek-ai/dsh-system-prompt": ">=0.1.0-rc.6 <0.3.0",
+    "@deepseek-ai/dsh-timeout": ">=0.1.0-rc.6 <0.3.0",
+    "@deepseek-ai/dsh-tools": ">=0.1.0-rc.6 <0.3.0",
+    "@deepseek-ai/dsh-user-approval": ">=0.1.0-rc.6 <0.3.0"
   }
 }

@@ -69,8 +69,25 @@ dsh plugin add dsh-tool-gitbash
    `%APPDATA%\npm\node_modules\dsh-tool-gitbash`）或作为本地依赖引用。
 2. 确保 peer 依赖可用（`@deepseek-ai/cordis`、`@deepseek-ai/dsh-tools`、
    `@deepseek-ai/dsh-llm`、`@deepseek-ai/dsh-sandbox`、`@deepseek-ai/dsh-shell`、
-   `@deepseek-ai/dsh-timeout`）。
+   `@deepseek-ai/dsh-subprocess`、`@deepseek-ai/dsh-timeout`、
+   `@deepseek-ai/dsh-jobs`、`@deepseek-ai/dsh-shell-env`、
+   `@deepseek-ai/dsh-system-prompt`、`@deepseek-ai/dsh-user-approval`、
+   `@deepseek-ai/dsh-agent`）；直接依赖 `@deepseek-ai/schemastery` 会自动安装。
 3. 在 DSH 组合（composition）中启用该插件，重启后模型即获得 `gitbash` 工具。
+
+## DSH 版本兼容
+
+本插件声明 `engines.dsh: ">=0.1.0-rc.6 <0.3.0"`，对应的 `peerDependencies`
+全部使用同一区间，因此 **DSH 0.1.x 与 0.2.x（含 0.2.0-rc.1 / rc.2）都可加载**。
+
+> ⚠️ 这一步是必须的：DSH 启动时会用 `evaluatePluginCompatibility` 逐个校验 profile
+> bundle 的 `peerDependencies` 是否覆盖当前运行时版本。只要有一个
+> `@deepseek-ai/dsh-*` peer 区间不匹配（例如旧版的 `^0.1.0-rc.6` 遇到
+> `0.2.0-rc.2`），该 bundle 会被**整体跳过**、`cordis.patch.yml` 不生效，
+> 表现就是「插件装了但模型没有 `gitbash` 工具」，并在 stderr 打印
+> `skipping profile bundle "dsh-tool-gitbash": Plugin ... is incompatible with dsh ...`。
+> 升级 DSH 大版本后若出现此提示，先确认本插件的 peer 区间是否覆盖新版本。
+
 
 ## 配置
 

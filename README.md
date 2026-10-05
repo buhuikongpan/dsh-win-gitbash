@@ -33,8 +33,17 @@ DSH（DeepSeek Harness）在 Windows 上有两个原生命令工具的痛点：
 - `run_in_background` 参数仅在 `enableRunInBackground` 开启时暴露；关闭时描述提示"后台执行不可用"，与原生一致
 - 沙箱受限时的升级提示 + 权限提问（`sandbox_permissions` + `justification` 双条件触发，经由 `approveEscalation` + `ctx.approval`）与原生完全一致
 - 工作目录解析与原生 `bash` 一致：沙箱根优先，否则会话 cwd 经 `canonicalPath` 规范化
+- **沙箱策略每次调用实时解析**：`ctx.sandboxPolicy` / `ctx.sandbox` 都不在 `apply()` 期读取。
+  cordis 并行装载各 plugin row，本插件的 row 可能早于 `sandbox-policy` 注册；若在 `apply()`
+  期就把"本组合是否 confine"定死，工具会永久裸跑（`read-only` / `workspace-write`
+  边界失效）。因此执行期的策略以调用时刻为准，工具 schema 则在 `ctx.sandboxPolicy`
+  就绪后重建一次（工具定义在注册时固化，早注册会把"无沙箱"写死成没有
+  `sandbox_permissions` 参数）。组合里确实没有 policy 服务时才回退为无沙箱工具。
 
-> 差异仅在**实现层**：原生依赖 `ctx.shell` 执行器；本工具作为 `ctx.subprocess` 消费者直接调用 Git for Windows 自带 bash。调用卡片与原生 pwsh 保持一致（复用 DSH 内置终端卡片）。
+> 差异仅在**实现层**：原生依赖 `ctx.shell` 执行器（`ctx.shell.sandboxMode` 由执行器
+> 转述）；本工具作为 `ctx.subprocess` 消费者直接调用 Git for Windows 自带 bash，
+> 没有执行器可问，所以自己订阅 `ctx.sandboxPolicy`。
+> 调用卡片与原生 pwsh 保持一致（复用 DSH 内置终端卡片）。
 
 ## 依赖
 
@@ -49,24 +58,29 @@ DSH（DeepSeek Harness）在 Windows 上有两个原生命令工具的痛点：
 
 ## 安装
 
-本插件以 npm 包 **`dsh-tool-gitbash`** 发布，声明了 `dsh.bundle` manifest，可直接通过 DSH 插件系统安装。
+本插件声明了 `dsh.bundle` manifest，可作为 profile bundle 直接安装。
 
-**方式一：命令行安装（推荐）**
+**方式一：从 GitHub 安装（推荐，目前唯一可用的远程方式）**
+
+> ⚠️ 包**尚未发布到 npm**（`dsh-tool-gitbash` 在 npmjs / npmmirror 上均为 404），
+> 所以 `dsh plugin add dsh-tool-gitbash` 会失败。请用 `github:` 形式安装，
+> 并 pin 一个 commit 以便复现：
 
 ```sh
-dsh plugin add dsh-tool-gitbash
+dsh plugin --profile <你的profile> add github:buhuikongpan/dsh-win-gitbash#<commit-sha>
 ```
 
-> 安装命令会自动处理 `@deepseek-ai/*` peer 依赖；装完在 DSH 组合（composition）/ profile 中启用该 bundle，重启后模型即可获得 `gitbash` 工具。
+> 安装命令会自动处理 `@deepseek-ai/*` peer 依赖；装完在 DSH 组合（composition）/
+> profile 中启用该 bundle（把 `dsh-tool-gitbash` 加进 `dsh.profile.bundles`），
+> 重启后模型即可获得 `gitbash` 工具。
+>
+> git 托管的插件依赖安装时的 `prepare` 脚本构建，pnpm 默认拦截；若报 `allowBuilds`
+> 相关错误，按提示把 pnpm 打印的 key 加进该 profile 的 `pnpm-workspace.yaml` 再重试。
 
-**方式二：dsh-market 图形界面**
-
-在 DSH Web 设置 → 插件市场（dsh-market）中搜索 `dsh-tool-gitbash`，一键安装。
-
-**方式三：手动放入 node_modules**
+**方式二：本地目录 / 手动放入 node_modules**
 
 1. 将本包放入 DSH 的 `node_modules`（如
-   `%APPDATA%\npm\node_modules\dsh-tool-gitbash`）或作为本地依赖引用。
+   `%APPDATA%\npm\node_modules\dsh-tool-gitbash`），或用 `link:` 指向本仓库。
 2. 确保 peer 依赖可用（`@deepseek-ai/cordis`、`@deepseek-ai/dsh-tools`、
    `@deepseek-ai/dsh-llm`、`@deepseek-ai/dsh-sandbox`、`@deepseek-ai/dsh-shell`、
    `@deepseek-ai/dsh-subprocess`、`@deepseek-ai/dsh-timeout`、
